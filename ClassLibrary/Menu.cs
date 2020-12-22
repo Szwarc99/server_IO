@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace ClassLibrary
 {
-    class Menu
+    public class Menu
     {
         public void BeginDataTransmission(NetworkStream stream)
         {
