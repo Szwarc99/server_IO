@@ -167,6 +167,7 @@ namespace ClassLibrary
             StreamReader streamReader = new StreamReader("C:\\Users\\Piotrek\\Desktop\\STUDIA\\semestr5\\Inżynieria oprogramowania\\scrabble\\slowa.txt");
             char[] alfabet = { 'a', 'ą', 'b', 'c', 'ć', 'd', 'e', 'ę', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'ł', 'm', 'n', 'ń', 'o', 'ó', 'p', 'r', 's', 'ś', 't', 'u', 'w', 'y', 'z', 'ź', 'ż', '.' };
             ArrayList list = new ArrayList();
+            int count = 0;
 
             while (streamReader.ReadLine() != null)
             {
@@ -181,6 +182,7 @@ namespace ClassLibrary
                 String used = "";
                 String notUsed = "";
                 String needed = "";
+                Boolean match = true;
 
 
                 int i = 0;
@@ -205,18 +207,26 @@ namespace ClassLibrary
                     else if (Array.IndexOf(alfabet, sortedLetters[j]) > Array.IndexOf(alfabet, sortedDicWord[i]))
                     {
                         if (sortedDicWord[i] != '.')
-                            needed += sortedDicWord[i];
-                        i++;
+                        {
+                            count++;
+                            match = false;
+                            break;
+                        }
+                        /*needed += sortedDicWord[i];                            
+                    i++;*/
                     }
                 }
-                word._word = dicWord;
-                word._used = used;
-                word._notUsed = notUsed;
-                word._needed = needed;
-                word._val = countWordVal(dicWord);
-                if (word._val>0 && word._needed.Length<1)
+                if (match)
+                {
+                    word._word = dicWord;
+                    word._used = used;
+                    word._notUsed = notUsed;
+                    word._needed = needed;
+                    word._val = countWordVal(dicWord);
                     list.Add(word);
+                }                
             }
+            Console.WriteLine(count);
             return list;
         }
 
