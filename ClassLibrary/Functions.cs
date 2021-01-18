@@ -95,16 +95,45 @@ namespace ClassLibrary
             return new String(sorted);
         }
 
-        class Word
+        IDictionary<char, int> dictionary = new Dictionary<char, int>
+        {
+            //1 punkt: A (x9), E (x7), I (x8), N (x5), O (x6), R (x4), S (x4), W (x4), Z (x5)
+            {'a',1}, {'e',1}, {'i',1}, {'n',1}, {'o',1}, {'r',1}, {'s',1}, {'w',1}, {'z',1},
+            //2 punkty: C (x3), D (x3), K(x3), L(x3), M(x3), P (x3), T (x3), Y (x4)
+            {'c',2}, {'d',2}, {'k',2}, {'l',2}, {'m',2}, {'p',2}, {'t',2}, {'y',2},
+            //3 punkty: B (x2), G(x2), H(x2), J (x2), Ł (x2), U (x2)
+            {'b',2}, {'g',2}, {'h',2}, {'j',2}, {'ł',2}, {'u',2},
+            //5 punktów: Ą (x1), Ę (x1), F (x1), Ó (x1), Ś (x1), Ż (x1)
+            {'ą',2}, {'ę',2}, {'f',2}, {'ó',2}, {'ś',2}, {'ż',2},
+
+            {'ć',6}, {'ń',7}, {'ź',9}
+        };
+
+        int countWordVal(String str)
+        {
+            int val = 0;
+            foreach (char c in str)
+            {
+                if (dictionary.ContainsKey(c))
+                    val += dictionary[c];
+                else
+                    return 0;
+            }
+            return val;
+        }
+
+        public class Word
         {
             String word;
             String used;
             String notUsed;
             String needed;
+            int val;
             public String _word { get => word; set => word = value; }
             public String _used { get => used; set => used = value; }
             public String _notUsed { get => notUsed; set => notUsed = value; }
             public String _needed { get => needed; set => needed = value; }
+            public int _val { get => val; set => val = value; }
 
             public void print()
             {
@@ -113,9 +142,27 @@ namespace ClassLibrary
                 Console.WriteLine();
             }
         }
+        private class sortValDesc : IComparer
+        {
+            int IComparer.Compare(object a, object b)
+            {
+                Word w1 = (Word)a;
+                Word w2 = (Word)b;
+                if (w1._val < w2._val)
+                    return 1;
+                if (w1._val > w2._val)
+                    return -1;
+                else
+                    return 0;
+            }
+        }
 
+        public static IComparer sortVal()
+        {
+            return (IComparer)new sortValDesc();
+        }
 
-        ArrayList findPossibleWords(String letters)
+        public ArrayList findPossibleWords(String letters)
         {
             StreamReader streamReader = new StreamReader("C:\\Users\\Piotrek\\Desktop\\STUDIA\\semestr5\\Inżynieria oprogramowania\\scrabble\\slowa.txt");
             char[] alfabet = { 'a', 'ą', 'b', 'c', 'ć', 'd', 'e', 'ę', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'ł', 'm', 'n', 'ń', 'o', 'ó', 'p', 'r', 's', 'ś', 't', 'u', 'w', 'y', 'z', 'ź', 'ż', '.' };
@@ -166,7 +213,9 @@ namespace ClassLibrary
                 word._used = used;
                 word._notUsed = notUsed;
                 word._needed = needed;
-                list.Add(word);
+                word._val = countWordVal(dicWord);
+                if (word._val>0 && word._needed.Length<1)
+                    list.Add(word);
             }
             return list;
         }
