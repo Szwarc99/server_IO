@@ -169,12 +169,15 @@ namespace ClassLibrary
             ArrayList list = new ArrayList();
             int count = 0;
 
-            while (streamReader.ReadLine() != null)
+            String dicWord;
+            while ((dicWord = streamReader.ReadLine())!=null )
             {
-                Word word = new Word();
-
-
-                String dicWord = streamReader.ReadLine();
+                Word word = new Word();                
+                count++;
+                if (dicWord == "kot")
+                {
+                    Console.WriteLine(dicWord);
+                }
                 String sortedLetters = sort(letters);
                 String sortedDicWord = sort(dicWord);
                 sortedLetters += ".";
@@ -208,7 +211,6 @@ namespace ClassLibrary
                     {
                         if (sortedDicWord[i] != '.')
                         {
-                            count++;
                             match = false;
                             break;
                         }
@@ -224,8 +226,8 @@ namespace ClassLibrary
                     word._needed = needed;
                     word._val = countWordVal(dicWord);
                     list.Add(word);
-                }                
-            }
+                }
+            } 
             Console.WriteLine(count);
             return list;
         }
